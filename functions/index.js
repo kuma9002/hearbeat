@@ -1,17 +1,16 @@
-
-// index.js — Cloudflare Pages Functions Worker
+// functions/index.js — Cloudflare Pages Function
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────
-const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1374501505167659220/0ZUDpNECKPKY1Asqane7b-Kw5oY2y3MUwHLzknAIg_TsGYCQyDGVYG_1ytDWZVSRImq2"; // your webhook
+const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1374501505167659220/0ZUDpNECKPKY1Asqane7b-Kw5oY2y3MUwHLzknAIg_TsGYCQyDGVYG_1ytDWZVSRImq2";
 const BOT_SECRETS = {
   "bot01": "ktb",
-  // add more bot IDs and secrets as needed
+  // add more bot IDs and secrets here if needed
 };
 // ─────────────────────────────────────────────────────────────────────────
 
 export async function onRequestPost(context) {
   const url = new URL(context.request.url);
-  const path = url.pathname; // "/sign" or "/start"
+  const path = url.pathname;  // e.g. "/sign" or "/start"
 
   if (!(path === "/sign" || path === "/start")) {
     return new Response("Not found", { status: 404 });
@@ -25,11 +24,13 @@ export async function onRequestPost(context) {
   }
 
   const { botId, secret, ts } = data;
-  if (!botId || !secret || !ts)
+  if (!botId || !secret || !ts) {
     return new Response("Missing fields", { status: 400 });
+  }
 
-  if (BOT_SECRETS[botId] !== secret)
+  if (BOT_SECRETS[botId] !== secret) {
     return new Response("Unauthorized", { status: 401 });
+  }
 
   const timeStr = `<t:${Math.floor(ts / 1000)}:F>`;
   const content = path === "/sign"
@@ -44,3 +45,4 @@ export async function onRequestPost(context) {
 
   return new Response("OK", { status: 200 });
 }
+
