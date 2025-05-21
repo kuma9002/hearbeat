@@ -1,0 +1,5 @@
+{
+  "name": "heartbeat",
+  "main": "functions/index.js",
+  "type": "module"
+}
